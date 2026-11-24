@@ -12,7 +12,13 @@ function Notes() {
           { id: 2, title: 'Prepare for the quiz', body: 'Practice writing one handler for many inputs.' },
         ]
   })
-  const [formData, setFormData] = useState({ title: '', body: '' })
+  const [formData, setFormData] = useState(() => {
+    const savedDraft = localStorage.getItem('draft')
+
+    return savedDraft
+      ? JSON.parse(savedDraft)
+      : { title: '', body: '' }
+  })
   const [searchTerm, setSearchTerm] = useState('')
   const titleRef = useRef(null)
 
