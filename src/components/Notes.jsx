@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import NoteCard from './NoteCard.jsx'
 
 function Notes() {
@@ -23,15 +23,18 @@ function Notes() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       localStorage.setItem('draft', JSON.stringify(formData))
-      console.log('draft saved:', formData.title)
     }, 1000)
 
     return () => clearTimeout(timeoutId)
   }, [formData])
 
-  const visibleNotes = notes.filter((note) =>
-    note.title.toLowerCase().includes(searchTerm.trim().toLowerCase()),
-  )
+  const visibleNotes = useMemo(() => {
+    const result = notes.filter((note) =>
+      note.title.toLowerCase().includes(searchTerm.trim().toLowerCase()),
+    )
+    console.log('filtering', notes.length)
+    return result
+  }, [notes, searchTerm])
 
   function handleChange(event) {
     const { name, value } = event.target
